@@ -1,0 +1,4 @@
+export const ENGINE_VERSION = '0.1.0';
+export function engineVersionLine() {
+    return `@ligant/bench-engines ${ENGINE_VERSION}`;
+}

@@ -1,0 +1,22 @@
+{
+  "name": "c12-a280-and-degree-of-labelling",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Protein concentration by A280 and degree of labelling of a dye conjugate, from two absorbance readings, in the browser.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5182",
+    "build": "vite build",
+    "preview": "vite preview --port 5182"
+  },
+  "dependencies": {
+    "@ligant/bench-chrome": "file:vendor/ligant-bench-chrome-1.10.0.tgz"
+  },
+  "devDependencies": {
+    "vite": "^8.3.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

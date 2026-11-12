@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://static.cloudflareinsights.com/beacon.min.js https://static.cloudflareinsights.com/beacon.min.js/ https://www.googletagmanager.com; style-src 'self'; font-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src https://benchtools.ligant.ai/cdn-cgi/rum https://benchtools.ligant.ai/api/subscribe https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://www.google.com https://*.g.doubleclick.net; object-src 'none'; base-uri 'self'; form-action 'none'">
+  
+  <link rel="icon" id="favicon" href="data:,">
+  <meta name="referrer" content="no-referrer">
+  <title>Ligant · A280 and Degree of Labelling</title>
+  <meta name="description" content="Protein concentration by A280 and degree of labelling of a dye conjugate, from two absorbance readings, in the browser.">
+  <link rel="canonical" href="https://benchtools.ligant.ai/a280-and-degree-of-labelling/">
+  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#FAF7F2">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://benchtools.ligant.ai/a280-and-degree-of-labelling/">
+  <meta property="og:site_name" content="Ligant Bench Tools">
+  <meta property="og:title" content="Ligant · A280 and Degree of Labelling">
+  <meta property="og:description" content="Protein concentration by A280 and degree of labelling of a dye conjugate, from two absorbance readings, in the browser.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Ligant · A280 and Degree of Labelling">
+  <meta name="twitter:description" content="Protein concentration by A280 and degree of labelling of a dye conjugate, from two absorbance readings, in the browser.">
+  
+  <script type="application/ld+json" id="ld-faq">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Why we ask: the dilution","acceptedAnswer":{"@type":"Answer","text":"Why we ask: The dilution factor cancels in the degree of labelling only when both absorbances were read on the same dilution; it never cancels in a reported concentration. Count total parts: 1 part sample in 10 parts total is 10, and so is 1 part sample plus 9 parts buffer; undiluted is 1. A label such as \"1:10\" can mean either, so check how the dilution was made."}},{"@type":"Question","name":"Why we ask: the extinction coefficient","acceptedAnswer":{"@type":"Answer","text":"Why we ask: The protein's extinction coefficient sets the protein concentration directly, and a value for a different protein gives a wrong answer with no warning. Enter the molar value, in M^-1 cm^-1. If your source gives E1% (the absorbance of a 10 mg/mL solution in a 1 cm path), the molar value is E1% × MW / 10: for IgG, 14 × 150,000 / 10 = 210,000. An E1% value entered as a molar one makes the protein molarity MW/10 times too high, 15,000 times for IgG."}},{"@type":"Question","name":"Why we ask: the path length","acceptedAnswer":{"@type":"Answer","text":"Why we ask: Concentration is absorbance divided by (extinction coefficient × path), so a wrong path gives a wrong concentration. Enter the path in cm; a standard cuvette is 1. Some microvolume instruments report absorbance already normalised to a 1 cm path; if yours does, enter 1, not the instrument's physical gap. The path cancels in the degree of labelling, but not in either concentration."}},{"@type":"Question","name":"Why we ask: the molecular weight","acceptedAnswer":{"@type":"Answer","text":"Optional. The unlabelled protein's molecular weight in g/mol (an IgG is about 150,000 g/mol). It is used only to give the protein in mg/mL. Entering 150 for 150 kDa gives an answer 1,000 times too small, and the tool cannot tell."}},{"@type":"Question","name":"Why we ask: the correction factor","acceptedAnswer":{"@type":"Answer","text":"Why we ask: Dyes absorb at 280 nm too. The correction factor (CF) removes the dye's share from the A280 before the protein is calculated."}}]}</script>
+  <script type="application/ld+json" id="ld-software">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Ligant · A280 and Degree of Labelling","description":"Protein concentration by A280 and degree of labelling of a dye conjugate, from two absorbance readings, in the browser.","url":"https://benchtools.ligant.ai/a280-and-degree-of-labelling/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any (web browser)"}</script>
+  <link rel="stylesheet" href="./src/tokens.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="app">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="masthead" id="site-header"></header>
+  <main id="main">
+    <div class="example-row" id="example-row">
+      <button type="button" class="btn" id="ex-1" data-t="UI.example.1"></button>
+      <button type="button" class="btn" id="ex-2" data-t="UI.example.2"></button>
+      <button type="button" class="btn" id="ex-clear" data-t="UI.example.clear"></button>
+      <p class="status-line" id="example-status" role="status" aria-live="polite"></p>
+    </div>
+
+    <div class="layout">
+      <div class="stack">
+        <section class="panel" aria-labelledby="s1-title">
+          <div class="panel-head"><span class="step">1</span><h2 id="s1-title" data-t="UI.section.1"></h2></div>
+          <div class="panel-body">
+            <div class="field-row">
+              <div class="field">
+                <label for="f-a280"><span data-t="LABEL.a280"></span><span data-u="UNIT.a280"></span><span class="mark" id="mark-a280" hidden></span></label>
+                <input class="num" id="f-a280" name="a280" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="msg-a280">
+                <div class="msg" id="msg-a280"></div>
+              </div>
+              <div class="field">
+                <label for="f-dilA280"><span data-t="LABEL.dilA280"></span><span class="mark" id="mark-dilA280" hidden></span></label>
+                <input class="num" id="f-dilA280" name="dilA280" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="help-dil msg-dilA280">
+                <div class="msg" id="msg-dilA280"></div>
+              </div>
+            </div>
+            <p class="help" id="help-dil"><span data-t="A280-IN-02.undiluted"></span>. <span data-t="A280-IN-02.convention"></span>.</p>
+            <details class="why"><summary data-t="UI.why.dil"></summary><p class="help" data-t="A280-IN-11.W-1"></p></details>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="s2-title">
+          <div class="panel-head"><span class="step">2</span><h2 id="s2-title" data-t="UI.section.2"></h2></div>
+          <div class="panel-body">
+            <div class="field">
+              <label for="f-dye"><span data-t="LABEL.dye"></span><span class="mark" id="mark-dye" hidden></span></label>
+              <select id="f-dye" name="dye" aria-describedby="msg-dye"></select>
+              <div class="msg" id="msg-dye"></div>
+            </div>
+            <div id="dye-echo"></div>
+            <div id="dye-other" class="group" hidden>
+              <div class="field">
+                <label for="f-lambdaMax"><span data-t="LABEL.lambdaMax"></span><span data-u="UNIT.lambdaMax"></span></label>
+                <input class="num" id="f-lambdaMax" name="lambdaMax" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="msg-lambdaMax">
+                <div class="msg" id="msg-lambdaMax"></div>
+              </div>
+              <div class="field">
+                <label for="f-epsDye"><span data-t="LABEL.epsDye"></span><span data-u="UNIT.epsDye"></span></label>
+                <input class="num" id="f-epsDye" name="epsDye" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="msg-epsDye">
+                <div class="msg" id="msg-epsDye"></div>
+              </div>
+              <div class="field">
+                <label for="f-cf"><span data-t="LABEL.cf"></span></label>
+                <input class="num" id="f-cf" name="cf" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="msg-cf">
+                <div class="msg" id="msg-cf"></div>
+              </div>
+              <div class="field">
+                <label for="f-dyeSource"><span data-t="LABEL.dyeSource"></span></label>
+                <textarea id="f-dyeSource" name="dyeSource" rows="2" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="help-dyeSource msg-dyeSource"></textarea>
+                <p class="help" id="help-dyeSource" data-t="A280-IN-11.W-7"></p>
+                <div class="msg" id="msg-dyeSource"></div>
+              </div>
+            </div>
+            <p class="help" id="t-fl02" data-t="A280-FL-02"></p>
+            <details class="why"><summary data-t="UI.why.cf"></summary><p class="help" data-t="A280-IN-11.W-5"></p></details>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-amax"><span data-t="LABEL.amax"></span><span data-u="UNIT.amax"></span><span class="mark" id="mark-amax" hidden></span></label>
+                <input class="num" id="f-amax" name="amax" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="msg-amax">
+                <div class="msg" id="msg-amax"></div>
+              </div>
+              <div class="field">
+                <label for="f-dilAmax"><span data-t="LABEL.dilAmax"></span><span class="mark" id="mark-dilAmax" hidden></span></label>
+                <input class="num" id="f-dilAmax" name="dilAmax" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="help-dil2 msg-dilAmax">
+                <div class="msg" id="msg-dilAmax"></div>
+              </div>
+            </div>
+            <p class="help" id="help-dil2"><span data-t="A280-IN-02.undiluted"></span>. <span data-t="A280-IN-02.convention"></span>.</p>
+            <details class="why"><summary data-t="UI.why.dil"></summary><p class="help" data-t="A280-IN-11.W-1"></p></details>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="s3-title">
+          <div class="panel-head"><span class="step">3</span><h2 id="s3-title" data-t="UI.section.3"></h2></div>
+          <div class="panel-body">
+            <div class="field">
+              <label for="f-epsProtein"><span data-t="LABEL.epsProtein"></span><span data-u="UNIT.epsProtein"></span><span class="mark" id="mark-epsProtein" hidden></span></label>
+              <input class="num" id="f-epsProtein" name="epsProtein" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="msg-epsProtein">
+              <div class="msg" id="msg-epsProtein"></div>
+            </div>
+            <details class="why"><summary data-t="UI.why.eps"></summary><p class="help" data-t="A280-IN-11.W-2"></p></details>
+            <fieldset class="field radios" aria-describedby="msg-epsDecl">
+              <legend><span data-t="LABEL.epsDecl"></span><span class="mark" id="mark-epsDecl" hidden></span></legend>
+              <label class="radio"><input type="radio" name="epsDecl" value="notMeasured"> <span data-t="A280-IN-11.W-6.notMeasured"></span></label>
+              <label class="radio"><input type="radio" name="epsDecl" value="measured"> <span data-t="A280-IN-11.W-6.measured"></span></label>
+              <div class="msg" id="msg-epsDecl"></div>
+            </fieldset>
+            <div class="field">
+              <label for="f-epsProteinSource"><span data-t="LABEL.epsProteinSource"></span><span class="mark" id="mark-epsProteinSource" hidden></span></label>
+              <textarea id="f-epsProteinSource" name="epsProteinSource" rows="2" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="help-epsProteinSource msg-epsProteinSource"></textarea>
+              <p class="help" id="help-epsProteinSource" data-t="A280-IN-11.W-7"></p>
+              <div class="msg" id="msg-epsProteinSource"></div>
+            </div>
+            <div id="fl04"></div>
+            <div class="field">
+              <label for="f-path"><span data-t="LABEL.path"></span><span data-u="UNIT.path"></span><span class="mark" id="mark-path" hidden></span></label>
+              <input class="num" id="f-path" name="path" type="text" inputmode="decimal" enterkeyhint="next" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="msg-path">
+              <div class="msg" id="msg-path"></div>
+            </div>
+            <details class="why"><summary data-t="UI.why.path"></summary><p class="help" data-t="A280-IN-11.W-3"></p></details>
+            <div class="field">
+              <label for="f-mw"><span data-t="LABEL.mw"></span> <span data-t="UI.optional"></span><span data-u="UNIT.mw"></span><span class="mark" id="mark-mw" hidden></span></label>
+              <input class="num" id="f-mw" name="mw" type="text" inputmode="decimal" enterkeyhint="done" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="msg-mw">
+              <div class="msg" id="msg-mw"></div>
+            </div>
+            <details class="why"><summary data-t="UI.why.mw"></summary><p class="help" data-t="A280-IN-11.W-4"></p></details>
+          </div>
+        </section>
+      </div>
+
+      <aside class="rail">
+        <p class="banner" id="example-banner" role="status" hidden></p>
+        <section class="panel series-sticky" aria-labelledby="r4-title">
+          <div class="panel-head"><span class="step">4</span><h2 id="r4-title" data-t="UI.result.title"></h2><span class="head-status" id="r4-status" hidden></span></div>
+          <div class="panel-body">
+            <div id="r4-state"></div>
+            <div id="graph-38" class="graph-mount"></div>
+            <div id="r4-source"></div>
+          </div>
+        </section>
+        <div class="sr-only" id="live-announce" aria-live="polite"></div>
+
+        <section class="panel" aria-labelledby="r5-title">
+          <div class="panel-head"><span class="step">5</span><h2 id="r5-title" data-t="UI.results.title"></h2></div>
+          <div class="panel-body" id="r5-body"></div>
+        </section>
+
+        <section class="panel" aria-label="Rounding and its effect">
+          <div class="panel-body">
+            <div id="static-pair"></div>
+            <div id="static-error"></div>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="x-title" id="export-panel">
+          <div class="panel-head"><h2 id="x-title" data-t="EXPORT.panel.title"></h2></div>
+          <div class="panel-body">
+            <div class="example-row">
+              <button type="button" class="btn" id="x-json" data-t="EXPORT.btn.json"></button>
+              <button type="button" class="btn" id="x-csv" data-t="EXPORT.btn.csv"></button>
+              <button type="button" class="btn" id="x-text" data-t="EXPORT.btn.text"></button>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <section class="method-panel" id="about" aria-labelledby="about-title">
+      <h2 id="about-title">About this calculator</h2>
+      <h3>What it does</h3>
+      <p>It takes the absorbance at 280 nm and the absorbance at the dye maximum, each with the dilution it was read at, and puts both on the undiluted sample. It removes the dye's share of the 280 nm reading and reports the protein concentration in molar (and in mg/mL when you enter a molecular weight), the dye concentration and the degree of labelling.</p>
+      <h3>How to use it</h3>
+      <p>Enter the two readings and the dilution of each, pick the dye, enter the protein's extinction coefficient and the path length, and read the result. The page opens on a worked example; the two example buttons fill every field for you, and Clear empties them.</p>
+      <h3>How it works</h3>
+      <h4>Relations</h4>
+      <ul class="relations">
+        <li>A280, undiluted equivalent = A280 as read × N (that reading's own dilution)</li>
+        <li>Dye-maximum absorbance, undiluted equivalent = absorbance at the dye maximum as read × N (that reading's own dilution)</li>
+        <li>Dye term = dye-maximum undiluted equivalent × CF; corrected A280 = A280 undiluted equivalent − dye term</li>
+        <li>Protein molarity = corrected A280 / (protein extinction coefficient × path length)</li>
+        <li>Dye molarity = dye-maximum undiluted equivalent / (dye extinction coefficient × path length)</li>
+        <li>Degree of labelling = dye molarity / protein molarity</li>
+        <li>Protein mg/mL = protein molarity × molecular weight, when you enter the molecular weight in g/mol</li>
+      </ul>
+      <p id="t-dt09" data-t="A280-DT-09"></p>
+      <h4>Constants and assumptions</h4>
+      <p>The vendor's instruction, quoted: "<span data-t="A280-FL-01"></span>". It is shown as a note beside any reading above 2.0 as read; it does not change the numbers.</p>
+      <p data-t="A280-OU-06.linearity"></p>
+      <p>The free-dye sentence, quoted: "<span data-t="A280-FL-03"></span>".</p>
+      <div id="constants-table"></div>
+      <h4>Precision, rounding and engine version</h4>
+      <p>The chain is computed exactly, with no rounding between the readings and the printed values. A value is rounded once, when it is printed. <span id="engine-line"></span></p>
+      <h4>Flags</h4>
+      <table class="stack-table" id="flags-legend"><thead><tr><th scope="col" data-t="UI.legend.code"></th><th scope="col" data-t="UI.legend.says"></th></tr></thead><tbody></tbody></table>
+      <h3>Why not a spreadsheet?</h3>
+      <p>A spreadsheet leaves the dilution of each reading, the dye lot and the rounding to memory. This calculator asks for each reading's own dilution, keeps full precision until it prints, and shows the working with your numbers.</p>
+      <h3>What it does not do</h3>
+      <div id="notdo-list"></div>
+    </section>
+
+    <section class="method-panel" id="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title" data-t="FAQ.title"></h2>
+      <div id="faq-list"></div>
+    </section>  </main>
+  <footer class="site-footer" id="site-footer"></footer>
+</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

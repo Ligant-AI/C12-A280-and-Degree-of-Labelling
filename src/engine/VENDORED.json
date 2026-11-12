@@ -1,0 +1,13 @@
+{
+  "repository": "bench-engines",
+  "branch": "t-0491-e10-conversions",
+  "commit": "6454261",
+  "note": "Read-only copies of git show 6454261:<path>, byte for byte (K-0495-8, K-0495-12). Never edit; re-vendor only on Kaito's hand-off.",
+  "files": [
+    { "from": "src/e10/conversions.js", "to": "src/engine/e10/conversions.js" },
+    { "from": "src/e10/index.js", "to": "src/engine/e10/index.js" },
+    { "from": "src/e10/units.js", "to": "src/engine/e10/units.js" },
+    { "from": "src/core.js", "to": "src/engine/core.js" },
+    { "from": "src/version.js", "to": "src/engine/version.js" }
+  ]
+}
